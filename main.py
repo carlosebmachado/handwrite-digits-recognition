@@ -1,24 +1,24 @@
-from neural_network import HWRModel
+from keras_preprocessing import image
+from keras.models import model_from_json
+import numpy as np
 
 
-def main():
-    model = HWRModel()
-    
-    # create and save
-    '''
-    model.load_data()
-    model.create()
-    model.compile()
-    model.train(1)
-    model.save()
-    print("Accuracy: ", model.get_accuracy())
-    '''
-    
-    #load
-    model.load_data()
-    model.load()
-    model.compile()
-    print("Accuracy: ", model.get_accuracy())
+json_file = open('saved_model/model.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+classifier = model_from_json(loaded_model_json)
+classifier.load_weights("saved_model/model.h5")
 
 
-main()
+# COMPILE
+classifier.compile(optimizer='adam',
+                   loss='categorical_crossentropy',
+                   metrics=['accuracy'])
+
+
+# RECOGNIZE
+test_img = image.load_img('test/digit-4_01.png', target_size=(28,28,1))
+test_img = image.img_to_array(test_img)
+test_img /= 255
+test_img = np.expand_dims(test_img, axis=0)
+classifier.predict(test_img)
