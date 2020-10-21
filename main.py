@@ -17,8 +17,14 @@ classifier.compile(optimizer='adam',
 
 
 # RECOGNIZE
-test_img = image.load_img('test/digit-4_01.png', target_size=(28,28,1))
+test_img = image.load_img('test/digit-4_01.png', target_size=(28,28))
 test_img = image.img_to_array(test_img)
 test_img /= 255
+
 test_img = np.expand_dims(test_img, axis=0)
+
+test_img = test_img.reshape(3, 28, 28, 1)
+test_img = test_img[0]
+test_img = np.expand_dims(test_img, axis=0)
+
 classifier.predict(test_img)
